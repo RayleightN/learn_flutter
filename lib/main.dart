@@ -30,12 +30,16 @@ class MyStatefulWidget extends StatefulWidget {
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   TextEditingController nameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  final formLogin = GlobalKey<FormState>();
+  late  String _username;
+  late String _password;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
         padding: const EdgeInsets.all(10),
         child: ListView(
+          key: formLogin,
           children: <Widget>[
             Container(
                 alignment: Alignment.center,
@@ -69,6 +73,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                   }
                   return null;
                 },
+                onSaved: (value)=>_username=value!,
               ),
 
             ),
@@ -95,7 +100,12 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                 child: ElevatedButton(
                   child: const Text('Login'),
                   onPressed: () {
-                    //act
+                    //print(nameController.text);
+                    //print(passwordController.text);
+                    if (formLogin.currentState!.validate()) {
+                      //formLogin.currentState.save();
+                      // use the email provided here
+                    }
                   },
                 )
             ),
