@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 void main() => runApp(const MyApp());
@@ -16,6 +15,34 @@ class MyApp extends StatelessWidget {
         appBar: AppBar(title: const Text(_title)),
         body: const MyStatefulWidget(),
       ),
+      /*initialRoute: '/',
+      routes: <String, WidgetBuilder>{
+        '/': (context) => const MyStatefulWidget(),
+        '/second': (context) => SecondHome(),
+      },*/
+    );
+  }
+}
+
+class SecondHome extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Second Home'),
+      ),
+      body: Center(
+        /*child: RaisedButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: Text('Go Back'),
+        ),*/
+        child: const Text(
+              'You are login',
+              style: TextStyle(fontSize: 20),
+        ),
+      ),
     );
   }
 }
@@ -30,16 +57,15 @@ class MyStatefulWidget extends StatefulWidget {
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   TextEditingController nameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  final formLogin = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
   late  String _username;
   late String _password;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-        padding: const EdgeInsets.all(10),
+    return Form(
+        key: _formKey,
         child: ListView(
-          key: formLogin,
           children: <Widget>[
             Container(
                 alignment: Alignment.center,
@@ -79,13 +105,19 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
             ),
             Container(
               padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-              child: TextField(
+              child: TextFormField(
                 obscureText: true,
                 controller: passwordController,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'Password',
                 ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter text';
+                  }
+                  return null;
+                },
               ),
             ),
             TextButton(
@@ -102,9 +134,17 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                   onPressed: () {
                     //print(nameController.text);
                     //print(passwordController.text);
-                    if (formLogin.currentState!.validate()) {
-                      //formLogin.currentState.save();
+                    if (_formKey.currentState!.validate()) {
+                      //_formKey.currentState.save();
                       // use the email provided here
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Processing Data')),
+                      );
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => SecondHome()),
+                      );
+                      //Navigator.pushNamed(context, '/second');
                     }
                   },
                 )
